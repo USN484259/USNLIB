@@ -1,6 +1,7 @@
 #pragma once
 #include "types.h"
 #include <string>
+#include <deque>
 #include <memory>
 
 struct Finder;
@@ -13,10 +14,14 @@ namespace USNLIB{
 			class iterator {		//input_iterator_tag
 
 				friend class path;
-				std::shared_ptr<Finder> finder;
+				const bool recursive;
+				const std::string filter;
+				std::deque<std::shared_ptr<Finder> > finder;
 
-				iterator(const path*);
-				iterator(const path*,const std::string&);
+				void subdir(void);
+
+				iterator(void);
+				iterator(const std::string&,const std::string&,bool = false);
 
 			public:
 				path iterator::operator*(void) const;
@@ -34,7 +39,6 @@ namespace USNLIB{
 			
 			friend class iterator;
 			path(const std::string&,TYPE,size_t);
-
 			//void refresh(void) const;
 			//static std::string&& resolve(const std::string&);
 
@@ -47,8 +51,8 @@ namespace USNLIB{
 			TYPE type(void) const;
 			size_t size(void) const;
 			
-			iterator begin(void) const;
-			iterator begin(const std::string&) const;
+			iterator begin(bool = false) const;
+			iterator begin(const std::string&,bool = false) const;
 			iterator end(void) const;
 			
 			std::string pathname(void) const;
